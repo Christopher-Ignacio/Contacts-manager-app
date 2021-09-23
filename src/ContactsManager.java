@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Iterator;
+//import
 
 public class ContactsManager {
     private static Path contactsPath = Paths.get("src/contacts.txt");
@@ -25,6 +26,13 @@ public class ContactsManager {
     }
 
     //TODO: Add Contact
+    public static void addContact(){
+        try{
+            Files.writeString(contactsPath, "Figure Four\n", StandardOpenOption.APPEND);
+        } catch (IOException ioe){
+            ioe.printStackTrace();
+        }
+    }
 
 
     //TODO: Search by Name
