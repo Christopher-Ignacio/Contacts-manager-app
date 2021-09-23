@@ -16,18 +16,20 @@ public class ContactsManager {
     public static void contactsManagerApp(){
         boolean keepRunning = true;
         while (keepRunning){
-            int userSelection;
+            int userSelection = 0;
             printMenu();
             try{
                 userSelection = getUserSelection();
             }  catch (NumberFormatException nfe){
                 nfe.printStackTrace();
-                userSelection = getUserSelection();
+                //userSelection = getUserSelection();
             } catch (IllegalArgumentException iae){
                 iae.printStackTrace();
-                userSelection = getUserSelection();
+                //userSelection = getUserSelection();
             }
             switch (userSelection){
+                case(0):
+                    break;
                 case(1):
                     readFileAndOutput();
                     break;
@@ -45,7 +47,7 @@ public class ContactsManager {
                     break;
                 default:
                     System.out.println("This should never happen if we wrote this correctly.");
-                    keepRunning = false;
+                    //keepRunning = false;
                     break;
             }
 
@@ -62,7 +64,7 @@ public class ContactsManager {
     }
     public static int getUserSelection() throws IllegalArgumentException{
         int userSelection = Integer.parseInt(sc.nextLine());
-        if (userSelection >= 1 || userSelection <= 5){
+        if (userSelection >= 1 && userSelection <= 5){
             return userSelection;
         } else {
             throw new IllegalArgumentException();
