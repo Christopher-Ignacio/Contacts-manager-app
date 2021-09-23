@@ -7,10 +7,28 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Iterator;
-//import
+import java.util.Scanner;
 
 public class ContactsManager {
+    private Scanner sc = new Scanner(System.in);
     private static Path contactsPath = Paths.get("src/contacts.txt");
+
+    public static void contactsManagerApp(){
+        boolean keepRunning = true;
+        while (keepRunning){
+            printMenu();
+
+        }
+    }
+    public static void printMenu(){
+        System.out.println(
+            "1. View contacts.\n" +
+            "2. Add a new contact.\n" +
+            "3. Search a contact by name.\n" +
+            "4. Delete an existing contact.\n" +
+            "5. Exit.\n" +
+            "Enter an option (1, 2, 3, 4 or 5):");
+    }
     //TODO: Show Contacts
     public static void readFileAndOutput(){
         List<String> linesInTheFile = new ArrayList<>();
