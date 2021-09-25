@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -86,9 +87,19 @@ public class ContactsManager {
     }
 
     //TODO: Add Contact
-    public static void addContact(){
+    public static void addContact() throws IllegalArgumentException{
+        String contactNum;
+        long numericallyHighestPossiblePhoneNumber = 9999999999L;
+        String contactName;
         try{
-            Files.writeString(contactsPath, "Figure Four\n", StandardOpenOption.APPEND);
+            //need to get conditinonals for throwing and possibly catching errors in here
+            contactName = sc.nextLine();
+            contactNum = sc.nextLine();
+            //parsing to Long should throw an error if there are non numeric characters in there but we also don't want numbers wih more than 10 digits (yeah, country code is a thing IRL but I'm assuming we're only calling people in our own country). Have not tested yet though
+            if (Long.parseLong(contactNum) > numericallyHighestPossiblePhoneNumber){
+                throw new IllegalArgumentException();
+            }
+            Files.writeString(contactsPath, contactName + " : " + contactNum, StandardOpenOption.APPEND);
         } catch (IOException ioe){
             ioe.printStackTrace();
         }
