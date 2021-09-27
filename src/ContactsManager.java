@@ -48,7 +48,7 @@ public class ContactsManager {
                 case(0):
                     break;
                 case(1):
-                    readFileAndOutput();
+                    printContacts();
                     break;
                 case(2):
                     addContact();
@@ -105,13 +105,13 @@ public class ContactsManager {
         }
     }
     //TODO: Show Contacts
-    public static void readFileAndOutput(){
-        List<String> linesInTheFile = new ArrayList<>();
-        try{
-            linesInTheFile = Files.readAllLines(contactsPath);
-        } catch (IOException ioe){
-            ioe.printStackTrace();
-        }
+    public static void printContacts(){
+//        List<String> linesInTheFile = new ArrayList<>();
+//        try{
+//            linesInTheFile = Files.readAllLines(contactsPath);
+//        } catch (IOException ioe){
+//            ioe.printStackTrace();
+//        }
         System.out.println("Name                     | Phone number\n-------------------------|--------------");
 //        for (String line : linesInTheFile){
 //            System.out.println(line);
@@ -132,18 +132,26 @@ public class ContactsManager {
         try{
             //need to get conditinonals for throwing and possibly catching errors in here
             System.out.println("Enter a name for this contact entry: ");
-            System.out.println("The following character sequence is illegal! \" | \"");
+            System.out.println("NOTICE: The following character sequence is illegal: \" | \"");
             contactName = sc.nextLine();
             if (contactName.contains(" | ")) {
                 throw new IllegalArgumentException();
             }
-            System.out.println("Enter a full 10-digit number for this contact: ");
+            System.out.println("Enter a full 7 or 10-digit number for this contact: ");
             contactNum = sc.nextLine();
+            Long.parseLong(contactNum); //Just doing this to take advantage of the error it throws if this string contains non-numeric values
+
             //parsing to Long should throw an error if there are non numeric characters in there but we also don't want numbers wih more than 10 digits (yeah, country code is a thing IRL but I'm assuming we're only calling people in our own country). Have not tested yet though
-            if (Long.parseLong(contactNum) > numericallyHighestPossiblePhoneNumber || Long.parseLong(contactNum) < 1000000000){
+//
+//            if ((Long.parseLong(contactNum) > numericallyHighestPossiblePhoneNumber || Long.parseLong(contactNum) < 1000000000) || ()){
+//                throw new IllegalArgumentException();
+//            }
+
+            if(contactNum.length() !=10 && contactNum.length() != 7){
                 throw new IllegalArgumentException();
             }
             contactArrayList.add(new Contact(contactName, contactNum));
+            System.out.println("Contact saved.");
             //Files.writeString(contactsPath, "\n"+ contactName + " | " + contactNum, StandardOpenOption.APPEND);
         }
 //        catch (IOException ioe){
@@ -179,7 +187,7 @@ public class ContactsManager {
             if (contact.getName().contains(searchTerm) || contact.getNumber().contains(searchTerm)) {
                 foundMatches = true;
                 System.out.println("Hey we found a match to your entry!");
-                System.out.println(contact.getName() + " | " + contact.getFormattedNumber());
+                System.out.printf("%-25s| %-12s\n", contact.getName(), contact.getFormattedNumber());
             }
         }
         if(!foundMatches){

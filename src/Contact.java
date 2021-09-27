@@ -24,6 +24,11 @@ public class Contact {
     }
 
     public String getFormattedNumber(){
-        return (number.substring(0, 3) + "-" + number.substring(3,6) + "-" + number.substring(6));
+        if(Long.parseLong(number) > 999999999L){
+            return (number.substring(0, 3) + "-" + number.substring(3,6) + "-" + number.substring(6));
+        } else{
+            return (number.substring(0, 3) + "-" + number.substring(3));
+        }
+
     }
 }
