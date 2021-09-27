@@ -87,6 +87,7 @@ public class ContactsManager {
             ioe.printStackTrace();
         }
     }
+
     public static void printMenu(){
         System.out.println(
             "1. View contacts.\n" +
@@ -96,6 +97,7 @@ public class ContactsManager {
             "5. Exit.\n" +
             "Enter an option (1, 2, 3, 4 or 5):");
     }
+
     public static int getUserSelection() throws IllegalArgumentException{
         int userSelection = Integer.parseInt(sc.nextLine());
         if (userSelection >= 1 && userSelection <= 5){
@@ -104,22 +106,12 @@ public class ContactsManager {
             throw new IllegalArgumentException();
         }
     }
+
     //TODO: Show Contacts
     public static void printContacts(){
-//        List<String> linesInTheFile = new ArrayList<>();
-//        try{
-//            linesInTheFile = Files.readAllLines(contactsPath);
-//        } catch (IOException ioe){
-//            ioe.printStackTrace();
-//        }
         System.out.println("Name                     | Phone number\n-------------------------|--------------");
-//        for (String line : linesInTheFile){
-//            System.out.println(line);
-//        }
-//        System.out.println();
         for (Contact contact : contactArrayList){
             System.out.printf("%-25s| %-12s\n", contact.getName(), contact.getFormattedNumber());
-//            System.out.println(contact.getName() + " | " + contact.getNumber());
         }
         System.out.println();
     }
@@ -127,7 +119,7 @@ public class ContactsManager {
     //TODO: Add Contact
     public static void addContact() throws IllegalArgumentException{
         String contactNum;
-        long numericallyHighestPossiblePhoneNumber = 9999999999L;
+        //long numericallyHighestPossiblePhoneNumber = 9999999999L;
         String contactName;
         try{
             //need to get conditinonals for throwing and possibly catching errors in here
@@ -139,50 +131,62 @@ public class ContactsManager {
             }
             System.out.println("Enter a full 7 or 10-digit number for this contact: ");
             contactNum = sc.nextLine();
-            Long.parseLong(contactNum); //Just doing this to take advantage of the error it throws if this string contains non-numeric values
 
             //parsing to Long should throw an error if there are non numeric characters in there but we also don't want numbers wih more than 10 digits (yeah, country code is a thing IRL but I'm assuming we're only calling people in our own country). Have not tested yet though
-//
-//            if ((Long.parseLong(contactNum) > numericallyHighestPossiblePhoneNumber || Long.parseLong(contactNum) < 1000000000) || ()){
-//                throw new IllegalArgumentException();
-//            }
 
             if(contactNum.length() !=10 && contactNum.length() != 7){
                 throw new IllegalArgumentException();
             }
+            Long.parseLong(contactNum); //Just doing this to take advantage of the error it throws if this string contains non-numeric values
+            for(int i = 0; i < contactArrayList.size(); i++){
+                if(contactName.equals(contactArrayList.get(i).getName())){
+                    System.out.println("There is already a contact named " + contactName + ". Would you like to overwrite the following contact? y/n");
+                    System.out.printf("%-25s| %-12s\n", contactArrayList.get(i).getName(), contactArrayList.get(i).getFormattedNumber());
+                    if(sc.nextLine().equalsIgnoreCase("y")){
+                        contactArrayList.remove(i);
+                        contactArrayList.add(new Contact(contactName,contactNum));
+                        System.out.println("Contact saved.");
+                        return;
+                    }
+                    System.out.println("The contact was not added.");
+                    return;
+                }
+            }
+            for(int i = 0; i < contactArrayList.size(); i++){
+                if(contactNum.equals(contactArrayList.get(i).getNumber())){
+                    System.out.println("There is already a contact with the number " + contactNum + ". Would you like to overwrite the following contact? y/n");
+                    System.out.printf("%-25s| %-12s\n", contactArrayList.get(i).getName(), contactArrayList.get(i).getFormattedNumber());
+                    if(sc.nextLine().equalsIgnoreCase("y")){
+                        contactArrayList.remove(i);
+                        contactArrayList.add(new Contact(contactName,contactNum));
+                        System.out.println("Contact saved.");
+                        return;
+                    }
+                    System.out.println("The contact was not added.");
+                    return;
+                }
+            }
             contactArrayList.add(new Contact(contactName, contactNum));
             System.out.println("Contact saved.");
             //Files.writeString(contactsPath, "\n"+ contactName + " | " + contactNum, StandardOpenOption.APPEND);
-        }
-//        catch (IOException ioe){
-//            ioe.printStackTrace();
-//            System.out.println("Writing to file failed (I think).");
-//        }
-        catch (NumberFormatException nfe){
+        } catch (NumberFormatException nfe){
             nfe.printStackTrace();
             System.out.println("That wasn't a proper number. Let's try that again.");
             addContact();
         } catch (IllegalArgumentException iae){
             iae.printStackTrace();
-            System.out.println("Your entry is not 10-digits in length or your name included illegal characters.");
+            System.out.println("Your entry is either not 7 or 10-digits in length, or your name included an illegal character sequence.");
             addContact();
         }
     }
 
-
     //TODO: Search by Name
-
     public static void search() {
         boolean foundMatches = false;
 
         System.out.println("Search by name or phone number: ");
         String searchTerm = sc.nextLine();
-//        List<String> linesInTheFile = new ArrayList<>();
-//        try {
-//            linesInTheFile = Files.readAllLines(contactsPath);
-//        } catch (IOException ioe) {
-//            ioe.printStackTrace();
-//        }
+
         for (Contact contact : contactArrayList) {
             if (contact.getName().contains(searchTerm) || contact.getNumber().contains(searchTerm)) {
                 foundMatches = true;
@@ -202,11 +206,13 @@ public class ContactsManager {
         String searchTerm = sc.nextLine();
 
         Iterator<Contact> listIterator = contactArrayList.iterator();
+        boolean foundMatch = false;
         while (listIterator.hasNext()){
             Contact item = listIterator.next();
             if (item.getName().contains(searchTerm)){
+                foundMatch = true;
                 System.out.println("Are you sure you would like to delete the following entry? y/n");
-                System.out.println(item.getName() + " " + item.getNumber());
+                System.out.printf("%-25s| %-12s\n", item.getName(), item.getFormattedNumber());
                 if (sc.nextLine().equalsIgnoreCase("y")) {
                     listIterator.remove();
                     System.out.println("Delete confirmed!");
@@ -214,6 +220,10 @@ public class ContactsManager {
                     System.out.println(item.getName() + " was not deleted.");
                 }
             }
+        }
+        if(!foundMatch){
+            System.out.println("We didn't find a contact that matches " + searchTerm +".");
+            System.out.println("Rerouting you back to the main menu.");
         }
     }
 }

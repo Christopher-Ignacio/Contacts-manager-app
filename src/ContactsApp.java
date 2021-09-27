@@ -6,11 +6,6 @@ public class ContactsApp {
 
     }
 }
-//for(int i = 0; i <= linesInFile; i++){
-// print("Name: " + line)
-//i++;
-//println(" Number: " + line)
-//}1
-// 3
+
 
 

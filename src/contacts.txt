@@ -2,6 +2,4 @@ Jeff Buckley | 1234567890
 Jack Blank | 1231231234
 Jane Doe | 2342342345
 Sam Space | 3453453456
-Jeff Again | 6154444444
-Steve Buttz | 1203456789
-Anthony Green | 1713568
+Steve Buttz | 5555555
