@@ -38,7 +38,7 @@ public class ContactsManager {
                     addContact();
                     break;
                 case(3):
-                    //Search for a contact by name
+                    searchByName();
                     break;
                 case(4):
                     //Delete and existing contact
@@ -119,6 +119,29 @@ public class ContactsManager {
 
 
     //TODO: Search by Name
+
+    public static void searchByName() {
+        boolean foundMatches = false;
+
+        System.out.println("Type in a name to search: ");
+        String searchTerm = sc.nextLine();
+        List<String> linesInTheFile = new ArrayList<>();
+        try {
+            linesInTheFile = Files.readAllLines(contactsPath);
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+        for (String line : linesInTheFile) {
+            if (line.contains(searchTerm)) {
+                foundMatches = true;
+                System.out.println("Hey we found a match to your entry!");
+                System.out.println(line);
+            }
+        }
+        if(!foundMatches){
+            System.out.println("Sorry we did not find any matches :( ");
+        }
+    }
 
 
     //TODO: Delete existing contact
