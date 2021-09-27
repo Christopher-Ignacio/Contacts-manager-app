@@ -13,8 +13,24 @@ import java.util.Scanner;
 public class ContactsManager {
     private static Scanner sc = new Scanner(System.in);
     private static Path contactsPath = Paths.get("src/contacts.txt");
+    private static ArrayList<Contact> contactArrayList = new ArrayList<>();
+
+    public static void readFileAndCreateObjects(){
+        List<String> linesInTheFile = new ArrayList<>();
+        try {
+            linesInTheFile = Files.readAllLines(contactsPath);
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+        for (String line : linesInTheFile) {
+            String[] contactNameAndNumber = line.split(" \\| ");
+            Contact contact = new Contact(contactNameAndNumber[0], contactNameAndNumber[1]);
+            contactArrayList.add(contact);
+        }
+    }
 
     public static void contactsManagerApp(){
+        readFileAndCreateObjects();
         boolean keepRunning = true;
         while (keepRunning){
             int userSelection = 0;
@@ -44,6 +60,7 @@ public class ContactsManager {
                     //Delete and existing contact
                     break;
                 case(5):
+                    overwriteFile();
                     keepRunning = false;
                     break;
                 default:
@@ -52,6 +69,22 @@ public class ContactsManager {
                     break;
             }
 
+        }
+    }
+    public static void overwriteFile(){
+        try {
+            Files.delete(contactsPath);
+            Files.createFile(contactsPath);
+            for (int i = 0; i < contactArrayList.size(); i++){
+                if(i < contactArrayList.size()-1) {
+                    Files.writeString(contactsPath, contactArrayList.get(i).getName() + " | " + contactArrayList.get(i).getNumber() + "\n", StandardOpenOption.APPEND);
+                } else{
+                    Files.writeString(contactsPath, contactArrayList.get(i).getName() + " | " + contactArrayList.get(i).getNumber(), StandardOpenOption.APPEND);
+                }
+            }
+
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
         }
     }
     public static void printMenu(){
@@ -80,8 +113,12 @@ public class ContactsManager {
             ioe.printStackTrace();
         }
         System.out.println("Name | Phone number\n---------------");
-        for (String line : linesInTheFile){
-            System.out.println(line);
+//        for (String line : linesInTheFile){
+//            System.out.println(line);
+//        }
+//        System.out.println();
+        for (Contact contact : contactArrayList){
+            System.out.println(contact.getName() + " | " + contact.getNumber());
         }
         System.out.println();
     }
@@ -101,11 +138,14 @@ public class ContactsManager {
             if (Long.parseLong(contactNum) > numericallyHighestPossiblePhoneNumber || Long.parseLong(contactNum) < 1000000000){
                 throw new IllegalArgumentException();
             }
-            Files.writeString(contactsPath, "\n"+ contactName + " | " + contactNum, StandardOpenOption.APPEND);
-        } catch (IOException ioe){
-            ioe.printStackTrace();
-            System.out.println("Writing to file failed (I think).");
-        } catch (NumberFormatException nfe){
+            contactArrayList.add(new Contact(contactName, contactNum));
+            //Files.writeString(contactsPath, "\n"+ contactName + " | " + contactNum, StandardOpenOption.APPEND);
+        }
+//        catch (IOException ioe){
+//            ioe.printStackTrace();
+//            System.out.println("Writing to file failed (I think).");
+//        }
+        catch (NumberFormatException nfe){
             nfe.printStackTrace();
             System.out.println("That wasn't a proper number. Let's try that again.");
             addContact();
@@ -124,17 +164,17 @@ public class ContactsManager {
 
         System.out.println("Search by name or phone number: ");
         String searchTerm = sc.nextLine();
-        List<String> linesInTheFile = new ArrayList<>();
-        try {
-            linesInTheFile = Files.readAllLines(contactsPath);
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-        }
-        for (String line : linesInTheFile) {
-            if (line.contains(searchTerm)) {
+//        List<String> linesInTheFile = new ArrayList<>();
+//        try {
+//            linesInTheFile = Files.readAllLines(contactsPath);
+//        } catch (IOException ioe) {
+//            ioe.printStackTrace();
+//        }
+        for (Contact contact : contactArrayList) {
+            if (contact.getName().contains(searchTerm) || contact.getNumber().contains(searchTerm)) {
                 foundMatches = true;
                 System.out.println("Hey we found a match to your entry!");
-                System.out.println(line);
+                System.out.println(contact.getName() + " | " + contact.getNumber());
             }
         }
         if(!foundMatches){
