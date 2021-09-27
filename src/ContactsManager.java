@@ -35,7 +35,7 @@ public class ContactsManager {
                     readFileAndOutput();
                     break;
                 case(2):
-                    //Add a new contact
+                    addContact();
                     break;
                 case(3):
                     //Search for a contact by name
@@ -93,15 +93,27 @@ public class ContactsManager {
         String contactName;
         try{
             //need to get conditinonals for throwing and possibly catching errors in here
+            System.out.println("Enter a name for this contact entry: ");
             contactName = sc.nextLine();
+            System.out.println("Enter a full 10-digit number for this contact: ");
             contactNum = sc.nextLine();
             //parsing to Long should throw an error if there are non numeric characters in there but we also don't want numbers wih more than 10 digits (yeah, country code is a thing IRL but I'm assuming we're only calling people in our own country). Have not tested yet though
-            if (Long.parseLong(contactNum) > numericallyHighestPossiblePhoneNumber){
+            if (Long.parseLong(contactNum) > numericallyHighestPossiblePhoneNumber || Long.parseLong(contactNum) < 1000000000){
                 throw new IllegalArgumentException();
             }
-            Files.writeString(contactsPath, contactName + " : " + contactNum, StandardOpenOption.APPEND);
+            Files.writeString(contactsPath, "\n"+ contactName + " | " + contactNum, StandardOpenOption.APPEND);
         } catch (IOException ioe){
             ioe.printStackTrace();
+
+            System.out.println("Writing to file failed (I think).");
+        } catch (NumberFormatException nfe){
+            nfe.printStackTrace();
+            System.out.println("That wasn't a proper number. Let's try that again.");
+            addContact();
+        } catch (IllegalArgumentException iae){
+            iae.printStackTrace();
+            System.out.println("That number is not 10-digits in length. We need a 10-digit phone number");
+            addContact();
         }
     }
 
