@@ -48,7 +48,7 @@ public class ContactsManager {
                 case(0):
                     break;
                 case(1):
-                    readFileAndOutput();
+                    printContacts();
                     break;
                 case(2):
                     addContact();
@@ -105,13 +105,13 @@ public class ContactsManager {
         }
     }
     //TODO: Show Contacts
-    public static void readFileAndOutput(){
-        List<String> linesInTheFile = new ArrayList<>();
-        try{
-            linesInTheFile = Files.readAllLines(contactsPath);
-        } catch (IOException ioe){
-            ioe.printStackTrace();
-        }
+    public static void printContacts(){
+//        List<String> linesInTheFile = new ArrayList<>();
+//        try{
+//            linesInTheFile = Files.readAllLines(contactsPath);
+//        } catch (IOException ioe){
+//            ioe.printStackTrace();
+//        }
         System.out.println("Name                     | Phone number\n-------------------------|--------------");
 //        for (String line : linesInTheFile){
 //            System.out.println(line);
