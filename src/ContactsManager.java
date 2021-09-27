@@ -112,13 +112,14 @@ public class ContactsManager {
         } catch (IOException ioe){
             ioe.printStackTrace();
         }
-        System.out.println("Name | Phone number\n---------------");
+        System.out.println("Name                     | Phone number\n-------------------------|--------------");
 //        for (String line : linesInTheFile){
 //            System.out.println(line);
 //        }
 //        System.out.println();
         for (Contact contact : contactArrayList){
-            System.out.println(contact.getName() + " | " + contact.getNumber());
+            System.out.printf("%-25s| %-12s\n", contact.getName(), contact.getFormattedNumber());
+//            System.out.println(contact.getName() + " | " + contact.getNumber());
         }
         System.out.println();
     }
@@ -131,7 +132,11 @@ public class ContactsManager {
         try{
             //need to get conditinonals for throwing and possibly catching errors in here
             System.out.println("Enter a name for this contact entry: ");
+            System.out.println("The following character sequence is illegal! \" | \"");
             contactName = sc.nextLine();
+            if (contactName.contains(" | ")) {
+                throw new IllegalArgumentException();
+            }
             System.out.println("Enter a full 10-digit number for this contact: ");
             contactNum = sc.nextLine();
             //parsing to Long should throw an error if there are non numeric characters in there but we also don't want numbers wih more than 10 digits (yeah, country code is a thing IRL but I'm assuming we're only calling people in our own country). Have not tested yet though
@@ -151,7 +156,7 @@ public class ContactsManager {
             addContact();
         } catch (IllegalArgumentException iae){
             iae.printStackTrace();
-            System.out.println("That number is not 10-digits in length. We need a 10-digit phone number");
+            System.out.println("Your entry is not 10-digits in length or your name included illegal characters.");
             addContact();
         }
     }
@@ -174,7 +179,7 @@ public class ContactsManager {
             if (contact.getName().contains(searchTerm) || contact.getNumber().contains(searchTerm)) {
                 foundMatches = true;
                 System.out.println("Hey we found a match to your entry!");
-                System.out.println(contact.getName() + " | " + contact.getNumber());
+                System.out.println(contact.getName() + " | " + contact.getFormattedNumber());
             }
         }
         if(!foundMatches){

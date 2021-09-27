@@ -22,4 +22,8 @@ public class Contact {
     public void setName(String name) {
         this.name = name;
     }
+
+    public String getFormattedNumber(){
+        return (number.substring(0, 3) + "-" + number.substring(3,6) + "-" + number.substring(6));
+    }
 }
