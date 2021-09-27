@@ -57,7 +57,7 @@ public class ContactsManager {
                     search();
                     break;
                 case(4):
-                    //Delete and existing contact
+                    deleteContact();
                     break;
                 case(5):
                     overwriteFile();
@@ -184,6 +184,23 @@ public class ContactsManager {
 
 
     //TODO: Delete existing contact
+    public static void deleteContact(){
+        System.out.println("Please enter a contact to delete.");
+        String searchTerm = sc.nextLine();
 
-
+        Iterator<Contact> listIterator = contactArrayList.iterator();
+        while (listIterator.hasNext()){
+            Contact item = listIterator.next();
+            if (item.getName().contains(searchTerm)){
+                System.out.println("Are you sure you would like to delete the following entry? y/n");
+                System.out.println(item.getName() + " " + item.getNumber());
+                if (sc.nextLine().equalsIgnoreCase("y")) {
+                    listIterator.remove();
+                    System.out.println("Delete confirmed!");
+                }else{
+                    System.out.println(item.getName() + " was not deleted.");
+                }
+            }
+        }
+    }
 }

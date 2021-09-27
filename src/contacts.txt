@@ -3,5 +3,4 @@ Jack Blank | 1231231234
 Jane Doe | 2342342345
 Sam Space | 3453453456
 Jeff Again | 6154444444
-BIanca Hello | 1233333333
 Steve Buttz | 1203456789
