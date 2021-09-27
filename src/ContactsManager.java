@@ -38,7 +38,7 @@ public class ContactsManager {
                     addContact();
                     break;
                 case(3):
-                    searchByName();
+                    search();
                     break;
                 case(4):
                     //Delete and existing contact
@@ -104,7 +104,6 @@ public class ContactsManager {
             Files.writeString(contactsPath, "\n"+ contactName + " | " + contactNum, StandardOpenOption.APPEND);
         } catch (IOException ioe){
             ioe.printStackTrace();
-
             System.out.println("Writing to file failed (I think).");
         } catch (NumberFormatException nfe){
             nfe.printStackTrace();
@@ -120,10 +119,10 @@ public class ContactsManager {
 
     //TODO: Search by Name
 
-    public static void searchByName() {
+    public static void search() {
         boolean foundMatches = false;
 
-        System.out.println("Type in a name to search: ");
+        System.out.println("Search by name or phone number: ");
         String searchTerm = sc.nextLine();
         List<String> linesInTheFile = new ArrayList<>();
         try {
